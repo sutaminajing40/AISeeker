@@ -18,7 +18,7 @@
     "dev:sam": "nodemon --watch dist --exec 'sam local start-api -t infra/template.yaml'",
     "dev:all": "concurrently \"yarn run dev\" \"yarn run dev:sam\"",
     "build": "tsc",
-    "deploy": "sam build -t infra/template.yaml && sam deploy -t infra/template.yaml --config-file samconfig.toml --profile private_AISeeker"
+    "deploy": "sam build -t infra/template.yaml && sam deploy -t infra/template.yaml --config-file samconfig.toml --profile private_AISeeker --no-confirm-changeset --no-fail-on-empty-changeset"
   },
   "main": "dist/app.js",
   "keywords": [],

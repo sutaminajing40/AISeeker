@@ -1,12 +1,18 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
+
+Globals:
+  Function:
+    Runtime: nodejs18.x
+
 Resources:
-  PdfFunction:
+  RegistPdfFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       CodeUri: ../dist/
       Handler: handlers/pdf/registPdf.handler
-      Runtime: nodejs18.x
+      Role: arn:aws:iam::224372234572:role/aiseeker-dev
+      Timeout: 60
       Events:
         ApiEvent:
           Type: Api
@@ -19,7 +25,8 @@ Resources:
     Properties:
       CodeUri: ../dist/
       Handler: handlers/pdf/deletePdf.handler
-      Runtime: nodejs18.x
+      Role: arn:aws:iam::224372234572:role/aiseeker-dev
+      Timeout: 60
       Events:
         ApiEvent:
           Type: Api
@@ -32,7 +39,8 @@ Resources:
     Properties:
       CodeUri: ../dist/
       Handler: handlers/query/sendQuery.handler
-      Runtime: nodejs18.x
+      Role: arn:aws:iam::224372234572:role/aiseeker-dev
+      Timeout: 120
       Events:
         ApiEvent:
           Type: Api
@@ -45,7 +53,7 @@ Resources:
     Properties:
       CodeUri: ../dist/
       Handler: handlers/ping.handler
-      Runtime: nodejs18.x
+      Role: arn:aws:iam::224372234572:role/aiseeker-dev
       Events:
         ApiEvent:
           Type: Api

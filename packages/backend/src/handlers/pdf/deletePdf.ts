@@ -2,7 +2,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda'
 
 import { PdfService } from '../../services/PdfService'
 
-export const handler: APIGatewayProxyHandler = async (event) => {
+export const handler: APIGatewayProxyHandler = async () => {
   try {
     const pdfService = new PdfService()
     pdfService.deletePdf()
