@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandler } from 'aws-lambda'
 
 import { ApiGatewayResponse } from '../../responses/apiGatewayResponse'
-import { QueryService } from '../../services/QueryService'
+import { QueryService } from '../../services/queryService'
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   const res = new ApiGatewayResponse()

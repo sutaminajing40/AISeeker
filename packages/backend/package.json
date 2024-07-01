@@ -14,11 +14,11 @@
     "pickleparser": "^0.2.1"
   },
   "scripts": {
-    "dev": "tsc -w",
-    "dev:sam": "nodemon --watch dist --exec 'sam local start-api -t infra/template.yaml'",
+    "dev": "cross-env ENVIRONMENT=local tsc -w",
+    "dev:sam": "cross-env ENVIRONMENT=local nodemon --watch dist --exec 'sam local start-api -t infra/template.yaml'",
     "dev:all": "concurrently \"yarn run dev\" \"yarn run dev:sam\"",
     "build": "tsc",
-    "deploy": "sam build -t infra/template.yaml && sam deploy -t infra/template.yaml --config-file samconfig.toml --profile private_AISeeker --no-confirm-changeset --no-fail-on-empty-changeset"
+    "deploy": "sam build -t infra/template.yaml && sam deploy -t infra/template.yaml --config-file samconfig.toml --profile private_AISeeker --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides Environment=dev"
   },
   "main": "dist/app.js",
   "keywords": [],

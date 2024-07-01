@@ -7,7 +7,7 @@ import multipart from 'aws-lambda-multipart-parser'
 import { UploadedFile } from 'express-fileupload'
 
 import { ApiGatewayResponse } from '../../responses/apiGatewayResponse'
-import { PdfService } from '../../services/PdfService'
+import { PdfService } from '../../services/pdfService'
 import { RequestWithFiles } from '../../utils/types'
 
 export const handler: APIGatewayProxyHandler = async (

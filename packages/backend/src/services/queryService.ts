@@ -3,7 +3,7 @@ import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents'
 import { pull } from 'langchain/hub'
 
-import { PdfService } from '../services/PdfService'
+import { PdfService } from '../services/pdfService'
 import { llm } from '../utils/models'
 
 export class QueryService {
