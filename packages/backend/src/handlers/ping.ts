@@ -4,5 +4,5 @@ import { ApiGatewayResponse } from '../responses/apiGatewayResponse'
 
 export const handler: APIGatewayProxyHandler = async () => {
   const res = new ApiGatewayResponse()
-  return res.setStatus(200).setMessage('Hello').getResponse()
+  return res.setStatus(200).setMessage('Hello World').getResponse()
 }
