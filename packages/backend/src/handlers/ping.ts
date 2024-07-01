@@ -1,8 +1,8 @@
 import { APIGatewayProxyHandler } from 'aws-lambda'
 
+import { ApiGatewayResponse } from '../responses/apiGatewayResponse'
+
 export const handler: APIGatewayProxyHandler = async () => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: 'hello' }),
-  }
+  const res = new ApiGatewayResponse()
+  return res.setStatus(200).setMessage('Hello').getResponse()
 }

@@ -1,20 +1,22 @@
 import { APIGatewayProxyHandler } from 'aws-lambda'
 
+import { ApiGatewayResponse } from '../../responses/apiGatewayResponse'
 import { PdfService } from '../../services/PdfService'
 
 export const handler: APIGatewayProxyHandler = async () => {
+  const res = new ApiGatewayResponse()
   try {
     const pdfService = new PdfService()
     pdfService.deletePdf()
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: 'PDFの削除が完了しました。' }),
-    }
+    return res
+      .setStatus(200)
+      .setMessage('PDFの削除が完了しました。')
+      .getResponse()
   } catch (err) {
     console.error('Delete Error:', err)
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'PDFの削除に失敗しました。' }),
-    }
+    return res
+      .setStatus(500)
+      .setMessage('PDFの削除に失敗しました。')
+      .getResponse()
   }
 }

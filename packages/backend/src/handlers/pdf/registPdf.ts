@@ -6,10 +6,11 @@ import {
   APIGatewayProxyEvent,
 } from 'aws-lambda'
 import multipart from 'aws-lambda-multipart-parser'
-import { Request, Response } from 'express'
-import { UploadedFile, FileArray } from 'express-fileupload'
+import { UploadedFile } from 'express-fileupload'
 
+import { ApiGatewayResponse } from '../../responses/apiGatewayResponse'
 import { PdfService } from '../../services/PdfService'
+import { RequestWithFiles } from '../../utils/types'
 
 export const handler: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
@@ -25,38 +26,33 @@ export const handler: APIGatewayProxyHandler = async (
   // multipart/form-dataをパース
   const parsedFiles = multipart.parse(decodedEvent, true)
 
-  const req = {
-    files: parsedFiles,
-  } as Request & { files?: FileArray }
-  const res = {
-    status: (code: number) => ({
-      send: (message: string) => ({
-        statusCode: code,
-        body: JSON.stringify({ message }),
-      }),
-    }),
-  } as unknown as Response
+  // これにより、Express.jsのリクエストオブジェクトと同様の構造を持つオブジェクトを作成
+  const req = { files: parsedFiles } as RequestWithFiles
+
+  const res = new ApiGatewayResponse()
 
   return registPdf(req, res)
 }
 
 export async function registPdf(
-  req: Request & { files?: FileArray },
-  res: Response,
+  req: RequestWithFiles,
+  res: ApiGatewayResponse,
 ): Promise<APIGatewayProxyResult> {
   if (!req.files || !('pdf' in req.files)) {
     return res
-      .status(400)
-      .send('PDFファイルがありません。') as unknown as APIGatewayProxyResult
+      .setStatus(400)
+      .setMessage('PDFファイルがありません。')
+      .getResponse()
   }
 
   const pdfFile = req.files.pdf as UploadedFile
   if (Array.isArray(pdfFile) || pdfFile.mimetype !== 'application/pdf') {
     return res
-      .status(400)
-      .send(
+      .setStatus(400)
+      .setMessage(
         '不正なコンテンツタイプです。application/pdfである必要があります。',
-      ) as unknown as APIGatewayProxyResult
+      )
+      .getResponse()
   }
 
   const fileName = pdfFile.name
@@ -67,21 +63,22 @@ export async function registPdf(
     const pdfSavePath = pdfService.savePdf(fileName, pdfFileData)
     try {
       await pdfService.processPdf(pdfSavePath)
-      return res.send(
-        'PDFの登録が完了しました',
-      ) as unknown as APIGatewayProxyResult
+      return res
+        .setStatus(200)
+        .setMessage('PDFの登録が完了しました')
+        .getResponse()
     } catch (processErr: any) {
       // 処理中にエラーが発生した場合、保存したPDFファイルを削除する
       fs.unlinkSync(pdfSavePath)
       return res
-        .status(500)
-        .send('PDFの処理に失敗しました。') as unknown as APIGatewayProxyResult
+        .setStatus(500)
+        .setMessage('PDFの処理に失敗しました。')
+        .getResponse()
     }
   } catch (saveErr: any) {
     return res
-      .status(409)
-      .send(
-        'このPDFはすでに登録されています。',
-      ) as unknown as APIGatewayProxyResult
+      .setStatus(409)
+      .setMessage('このPDFはすでに登録されています。')
+      .getResponse()
   }
 }
