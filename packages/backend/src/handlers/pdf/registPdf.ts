@@ -56,7 +56,7 @@ export async function registPdf(
         .getResponse()
     }
 
-    const pdfSavePath = pdfService.savePdf(pdfFile.name, pdfFile.data)
+    const pdfSavePath = await pdfService.savePdf(pdfFile.name, pdfFile.data)
     await pdfService.processPdf(pdfSavePath)
 
     return res
